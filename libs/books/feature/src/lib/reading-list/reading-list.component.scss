@@ -45,3 +45,13 @@
   font-size: 1rem;
   color: $gray60;
 }
+
+.action-btn-holder{
+  flex-direction: row !important;
+}
+.mark-as-unread-color{
+  color: $gray40 !important;
+}
+.mark-as-read-color{
+  color: $green10 !important;
+}

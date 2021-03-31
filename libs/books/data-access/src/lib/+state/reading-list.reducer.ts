@@ -65,6 +65,15 @@ const readingListReducer = createReducer(
       error: action.error
     };
   }),
+  on(ReadingListActions.confirmedMarkBookAsRead, (state, action) =>
+    readingListAdapter.updateOne(action.item, state)
+  ),
+  on(ReadingListActions.failedMarkBookAsRead, (state, action) => {
+    return {
+      ...state,
+      error: action.error
+    };
+  }),
 );
 
 export function reducer(state: State | undefined, action: Action) {
