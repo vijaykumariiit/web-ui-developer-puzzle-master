@@ -29,7 +29,7 @@ describe('ReadingListComponent', () => {
   
   it('removeFromReadingList should dispatch removeFromReadingList action', () => {
     const item = createReadingListItem('A');
-    const action = removeFromReadingList({ item });
+    const action = removeFromReadingList({ item: item, isUndoAction: false });
     const store = TestBed.inject(Store);
     const spy = jest.spyOn(store, 'dispatch');
     fixture.detectChanges();
