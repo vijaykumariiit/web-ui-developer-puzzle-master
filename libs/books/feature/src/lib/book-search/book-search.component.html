@@ -4,6 +4,7 @@
       autoFocus
       matInput
       type="search"
+      (input)="searchBooks()"
       [attr.aria-label]="'Enter search text to search for books'"
       placeholder="Search for books to add to your reading list"
       formControlName="term"
