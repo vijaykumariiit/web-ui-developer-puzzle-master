@@ -72,7 +72,7 @@ export class ReadingListEffects implements OnInitEffects {
               id: item.bookId,
               changes: { finishedDate: data.finishedDate, finished: true }
             };
-            return [ReadingListActions.confirmedMarkBookAsRead({item: bookUpdate}), BooksActions.markBookAsFinished({book: bookUpdate})]
+            return [BooksActions.markBookAsFinished({book: bookUpdate})]
           }
           ),
           catchError((error) =>
