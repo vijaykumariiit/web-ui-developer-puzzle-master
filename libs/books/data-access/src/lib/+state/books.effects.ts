@@ -12,8 +12,6 @@ export class BooksEffects {
     this.actions$.pipe(
       ofType(BooksActions.searchBooks),
       map(action => action.term),
-      debounceTime(500),
-      distinctUntilChanged(),
       switchMap((term) =>
         this.http.get<Book[]>(`/api/books/search?q=${term}`).pipe(
           map((data) => BooksActions.searchBooksSuccess({ books: data })),
