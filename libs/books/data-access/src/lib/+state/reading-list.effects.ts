@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, concatMap, exhaustMap, map } from 'rxjs/operators';
+import { catchError, concatMap, exhaustMap, map, switchMap } from 'rxjs/operators';
 import { ReadingListItem } from '@tmo/shared/models';
 import * as ReadingListActions from './reading-list.actions';
+import * as BooksActions from './books.actions';
+import { Update } from '@ngrx/entity';
+import { Book } from '@tmo/shared/models';
 
 @Injectable()
 export class ReadingListEffects implements OnInitEffects {
@@ -43,11 +46,37 @@ export class ReadingListEffects implements OnInitEffects {
       ofType(ReadingListActions.removeFromReadingList),
       concatMap(({ item }) =>
         this.http.delete(`/api/reading-list/${item.bookId}`).pipe(
-          map(() =>
-            ReadingListActions.confirmedRemoveFromReadingList({ item })
-          ),
+          switchMap(() =>{
+            const bookUpdate: Update<ReadingListItem | Book> = {
+              id: item.bookId,
+              changes: { finishedDate: null, finished: false }
+            };
+            return [ReadingListActions.confirmedRemoveFromReadingList({ item }), BooksActions.markBookAsWantToRead({book: bookUpdate})]
+           
+          }),
           catchError((error) =>
             of(ReadingListActions.failedRemoveFromReadingList({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  markBookAsRead$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ReadingListActions.markBookAsRead),
+      concatMap(({ item }) =>
+        this.http.put(`/api/reading-list/${item.bookId}/finished`,item).pipe(
+          switchMap((data: {finishedDate: string}) =>{
+            const bookUpdate: Update<ReadingListItem | Book> = {
+              id: item.bookId,
+              changes: { finishedDate: data.finishedDate, finished: true }
+            };
+            return [BooksActions.markBookAsFinished({book: bookUpdate})]
+          }
+          ),
+          catchError((error) =>
+            of(ReadingListActions.failedMarkBookAsRead({ error }))
           )
         )
       )

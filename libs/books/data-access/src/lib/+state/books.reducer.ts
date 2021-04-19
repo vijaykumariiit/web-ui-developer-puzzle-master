@@ -40,6 +40,12 @@ const booksReducer = createReducer(
     ...state,
     error
   })),
+  on(BooksActions.markBookAsFinished, (state, action) => 
+    booksAdapter.updateOne(action.book, state)
+  ),
+  on(BooksActions.markBookAsWantToRead, (state, action) => 
+    booksAdapter.updateOne(action.book, state)
+  ),
   on(BooksActions.clearSearch, state => booksAdapter.removeAll({ ...state, searchTerm: null , loaded: false}))
 );
 

@@ -2,6 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 import * as ReadingListActions from './reading-list.actions';
+import * as BooksActions from './books.actions';
 import { ReadingListItem } from '@tmo/shared/models';
 
 export const READING_LIST_FEATURE_KEY = 'readingList';
@@ -60,6 +61,15 @@ const readingListReducer = createReducer(
     readingListAdapter.removeOne(action.item.bookId, state)
   ),
   on(ReadingListActions.failedRemoveFromReadingList, (state, action) => {
+    return {
+      ...state,
+      error: action.error
+    };
+  }),
+  on(BooksActions.markBookAsFinished, (state, action) =>
+    readingListAdapter.updateOne(action.book, state)
+  ),
+  on(ReadingListActions.failedMarkBookAsRead, (state, action) => {
     return {
       ...state,
       error: action.error
