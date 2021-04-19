@@ -16,7 +16,7 @@ import { Book } from '@tmo/shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookSearchComponent implements OnInit {
-  getAllBooks$ = this.store.select(getAllBooks);
+  books$ = this.store.select(getAllBooks);
 
   searchForm = this.fb.group({
     term: ''
