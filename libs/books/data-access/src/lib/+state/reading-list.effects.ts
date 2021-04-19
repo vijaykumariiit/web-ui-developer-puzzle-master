@@ -32,12 +32,18 @@ export class ReadingListEffects implements OnInitEffects {
       concatMap((data) =>
         this.http.post('/api/reading-list', data.book).pipe(
           map(() => {
-              if(!data.isUndoAction){
-                this.openSnackBar("Book added to Reading list","Undo","undoAdd",data.book);
-              }
-              return ReadingListActions.confirmedAddToReadingList({ book: data.book })
+            if (!data.isUndoAction) {
+              this.openSnackBar(
+                'Book added to Reading list',
+                'Undo',
+                'undoAdd',
+                data.book
+              );
             }
-          ),
+            return ReadingListActions.confirmedAddToReadingList({
+              book: data.book,
+            });
+          }),
           catchError((error) =>
             of(ReadingListActions.failedAddToReadingList({ error }))
           )
@@ -51,13 +57,19 @@ export class ReadingListEffects implements OnInitEffects {
       ofType(ReadingListActions.removeFromReadingList),
       concatMap((data) =>
         this.http.delete(`/api/reading-list/${data.item.bookId}`).pipe(
-          map(() =>{
-            if(!data.isUndoAction){
-              this.openSnackBar("Book removed from Reading list","Undo","undoRemove",data.item);
+          map(() => {
+            if (!data.isUndoAction) {
+              this.openSnackBar(
+                'Book removed from Reading list',
+                'Undo',
+                'undoRemove',
+                data.item
+              );
             }
-            return ReadingListActions.confirmedRemoveFromReadingList({ item: data.item })
-          }
-          ),
+            return ReadingListActions.confirmedRemoveFromReadingList({
+              item: data.item,
+            });
+          }),
           catchError((error) =>
             of(ReadingListActions.failedRemoveFromReadingList({ error }))
           )
@@ -75,19 +87,29 @@ export class ReadingListEffects implements OnInitEffects {
     const snack = this._snackBar.open(message, action, {
       duration: 5000,
     });
-    snack.onAction().subscribe(()=>{
-      if(actionType==="undoRemove"){
-        this.store.dispatch(ReadingListActions.addToReadingList({ book: book, isUndoAction: true }));
-      }else if(actionType==="undoAdd"){
-        this.store.dispatch(ReadingListActions.removeFromReadingList({ item: { bookId: book.id , ...book }, isUndoAction: true }));
+    snack.onAction().subscribe(() => {
+      if (actionType === 'undoRemove') {
+        this.store.dispatch(
+          ReadingListActions.addToReadingList({
+            book: book,
+            isUndoAction: true,
+          })
+        );
+      } else if (actionType === 'undoAdd') {
+        this.store.dispatch(
+          ReadingListActions.removeFromReadingList({
+            item: { bookId: book.id, ...book },
+            isUndoAction: true,
+          })
+        );
       }
-    })
+    });
   }
 
   constructor(
     private actions$: Actions,
     private http: HttpClient,
     private _snackBar: MatSnackBar,
-    private readonly store: Store,
-    ) {}
+    private readonly store: Store
+  ) {}
 }
