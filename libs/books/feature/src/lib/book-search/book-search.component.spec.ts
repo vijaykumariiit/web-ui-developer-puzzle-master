@@ -60,7 +60,7 @@ describe('ProductsListComponent', () => {
 
   it('addBookToReadingList should dispatch addToReadingList action', () => {
     const book = createBook('A');
-    const action = addToReadingList({ book });
+    const action = addToReadingList({ book: book, isUndoAction: false });
     const store = TestBed.inject(Store);
     const spy = jest.spyOn(store, 'dispatch');
     fixture.detectChanges();
