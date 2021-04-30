@@ -68,4 +68,10 @@ describe('ProductsListComponent', () => {
 
     expect(spy).toHaveBeenCalledWith(action);
   });
+
+  it('ngOnDestroy should call unsubscribe', () => {
+    const spy = spyOn(component['subscription$'], 'unsubscribe');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
 });
