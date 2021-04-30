@@ -17,19 +17,19 @@
 
 <ng-container *ngIf="searchTerm; else empty">
   <div class="book-grid">
-    <div class="book" data-testing="book-item" *ngFor="let b of getAllBooks$ | async">
+    <div class="book" data-testing="book-item" *ngFor="let b of books$ | async">
       <div class="book--title">
         {{ b.title }}
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img [alt]="b.title" src="{{ b.coverUrl }}" />
+          <img alt="" src="{{ b.coverUrl }}" />
         </div>
         <div class="book--content--info">
           <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
           <div><strong>Publisher:</strong> {{ b.publisher }}</div>
           <div>
-            <strong>Published:</strong> {{ formatDate(b.publishedDate) }}
+            <strong>Published:</strong> {{ b.publishedDate | date:'shortDate' }}
           </div>
           <p [innerHTML]="b.description"></p>
           <div>

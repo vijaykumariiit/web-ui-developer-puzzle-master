@@ -23,7 +23,7 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookSearchComponent implements OnInit, OnDestroy {
-  getAllBooks$ = this.store.select(getAllBooks);
+  books$ = this.store.select(getAllBooks);
   subscription$: Subscription;
 
   searchForm = this.fb.group({
